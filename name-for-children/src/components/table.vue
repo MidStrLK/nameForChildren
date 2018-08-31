@@ -161,7 +161,7 @@
 </script>
 
 <style scoped>
-    @import '../node_modules/roboto-fontface/css/roboto/roboto-fontface.css';
+    @import '../../node_modules/roboto-fontface/css/roboto/roboto-fontface.css';
     table{
         margin-left: 22px;
         font-family: 'Roboto', sans-serif;

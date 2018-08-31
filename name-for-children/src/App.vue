@@ -6,14 +6,12 @@
 </template>
 
 <script>
-import HelloMyWorld from './components/HelloWorld.vue'
 import topMenu from './components/menu.vue'
 import centerTable from './components/table.vue'
 
 export default {
   name: 'app',
   components: {
-      HelloMyWorld,
       topMenu,
       centerTable
   },
