@@ -3,22 +3,26 @@
         <table class="center-table">
             <tr v-for="name in names" v-bind:key="name">
                 <td>
+                    <div class="font-awesome-div" @click="onRating(name, true)">
+                        <font-awesome-icon class="font-awesome-icon" icon="thumbs-up"/>
+                    </div>
+                </td>
+                <td class="rating">
                     {{getNameRating(name)}}
+                </td>
+                <td>
+                    <div class="font-awesome-div" @click="onRating(name, false)">
+                        <font-awesome-icon class="font-awesome-icon" icon="thumbs-down"/>
+                    </div>
                 </td>
                 <td>
                     {{filter.lastname}}
                 </td>
-                <td>
+                <td class="name">
                     {{name}}
                 </td>
                 <td>
                     {{filter.patronym}}
-                </td>
-                <td>
-                    <button @click="onRating(name, true)">UP</button>
-                </td>
-                <td>
-                   <button @click="onRating(name, false)">DOWN</button>
                 </td>
             </tr>
         </table>
@@ -26,9 +30,13 @@
 </template>
 
 <script>
+    import * as importNames from "./names.json";
+
     export default {
         name: "centerTable",
         created: function(){
+            this.boyNames = importNames.boys;
+            this.girlNames = importNames.girls;
             this.loadData();
             this.loadFilter();
             this.setFilter();
@@ -36,7 +44,7 @@
         },
         data() {
             return {
-                sort: 'rating',
+                sort: 'alphabet',
                 boyNames: ['first', 'second'],
                 girlNames: ['qwe', 'asd', 'zxc'],
                 namesRating: {
@@ -67,6 +75,7 @@
                 this.saveData();
             },
             getNameRating(name){
+                if(this.namesRating[name] === undefined) this.namesRating[name] = 1;
                 return this.namesRating[name];
             },
             setSort(sort){
@@ -114,19 +123,14 @@
 
                 let data = this.gender ? this.boyNames : this.girlNames;
 
-                if(val.namebeg){
-                    data = data.filter(item => (item.indexOf(val.namebeg) === 0))
-                }
-
-                if(val.nameend){
-                    data = data.filter(item => (item.lastIndexOf(val.nameend) === (item.length - val.nameend.length)))
-                }
-
                 data = data.filter(item => {
                     let flag = true;
+                    const name = item.toLowerCase();
+                    const nbeg = val.namebeg.toLowerCase();
+                    const nend = val.nameend.toLowerCase();
 
-                    if(val.namebeg && (item.indexOf(val.namebeg) !== 0)) flag = false;
-                    if(val.nameend && (item.lastIndexOf(val.nameend) !== (item.length - val.nameend.length))) flag = false;
+                    if(nbeg && ((name.indexOf(nbeg) === -1) || (name.indexOf(nbeg) !== 0))) flag = false;
+                    if(nend && ((name.indexOf(nend) === -1) || (name.lastIndexOf(nend) !== (name.length - nend.length)))) flag = false;
                     if(this.getNameRating(item) < parseInt(val.rating)) flag = false;
 
                     return flag;
@@ -157,5 +161,36 @@
 </script>
 
 <style scoped>
+    @import '../node_modules/roboto-fontface/css/roboto/roboto-fontface.css';
+    table{
+        margin-left: 22px;
+        font-family: 'Roboto', sans-serif;
+    }
+    .font-awesome-div{
+        width: 22px;
+        height: 22px;
+        color: #ccc;
+    }
+    .font-awesome-div:hover{
+        color: #555;
+    }
+
+    .rating{
+        color: #555;
+    }
+
+    .name{
+        text-align: right;
+    }
+
+    td{
+        -webkit-user-select: none;
+        /* user-select -- это нестандартное свойство */
+
+        -moz-user-select: none;
+        /* поэтому нужны префиксы */
+
+        -ms-user-select: none;
+    }
 
 </style>
